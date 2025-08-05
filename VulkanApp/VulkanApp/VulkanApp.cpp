@@ -5,6 +5,7 @@
 #include "vulkan/vulkan.h"
 
 
+VkInstance instance;
 
 void CreateInstance()
 {
@@ -26,7 +27,6 @@ void CreateInstance()
 	createInfo.enabledExtensionCount = sizeof(instanceExtensions) / sizeof(instanceExtensions[0]);
 	createInfo.ppEnabledExtensionNames = instanceExtensions;
 
-	VkInstance instance;
 	VkResult result = vkCreateInstance(&createInfo, nullptr, &instance);
 	
 
@@ -36,13 +36,24 @@ void CreateInstance()
 	vkDestroyInstance(instance, nullptr);
 }
 
+
+
 void InitializeVulkan() 
 {
 	CreateInstance();
 }
+
+void Destroy()
+{
+	if (instance != VK_NULL_HANDLE) {
+		vkDestroyInstance(instance, nullptr);
+	}
+}
+
 int main()
 {
 	InitializeVulkan();
+	Destroy();
 }
 
 
