@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include "vulkan/vulkan.h"
+#include <glfw3.h>
 
 struct Vector2
 {
@@ -121,8 +122,30 @@ void Destroy()
 
 int main()
 {
+	uint32_t width = 800;
+	uint32_t height = 600;
+
+
+	glfwInit();
+
+	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+
+	GLFWwindow* window = glfwCreateWindow(width, height, "Vulkan", nullptr, nullptr);
+
+
 	InitializeVulkan();
+
+
+
+	while (!glfwWindowShouldClose(window))
+	{
+		glfwPollEvents();
+	}
+
 	Destroy();
+	glfwDestroyWindow(window);
+	glfwTerminate();
 }
 
 
