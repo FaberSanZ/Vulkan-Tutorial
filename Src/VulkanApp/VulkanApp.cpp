@@ -1,4 +1,5 @@
-﻿// VulkanApp.cpp : This file contains the 'main' function. Program execution begins and ends there.
+﻿
+// VulkanApp.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
 #define VK_USE_PLATFORM_WIN32_KHR
@@ -15,16 +16,16 @@
 
 int main()
 {
-	uint32_t width = 1200;
-	uint32_t height = 820;
+    uint32_t width = 1200;
+    uint32_t height = 820;
 
-	// 0. GLFW Window
-	glfwInit();
-	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+    // 0. GLFW Window
+    glfwInit();
+    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
-	GLFWwindow* window = glfwCreateWindow(width, height, "Vulkan", nullptr, nullptr);
-	HWND hwnd = glfwGetWin32Window(window); // Get the Win32 HWND from GLFW
+    GLFWwindow* window = glfwCreateWindow(width, height, "Vulkan", nullptr, nullptr);
+    HWND hwnd = glfwGetWin32Window(window); // Get the Win32 HWND from GLFW
 
 
     // 1. Instance
@@ -155,16 +156,16 @@ int main()
     std::cout << "device: " << device << std::endl;
     std::cout << "queue: " << queue << std::endl;
     std::cout << "surface: " << surface << std::endl;
-	std::cout << "swapchain: " << swapchain << std::endl;
-	std::cout << "imageCount: " << imageCount << std::endl;
-	std::cout << "imageAvailable: " << imageAvailable << std::endl;
-	std::cout << "cmd" << cmd << std::endl;
+    std::cout << "swapchain: " << swapchain << std::endl;
+    std::cout << "imageCount: " << imageCount << std::endl;
+    std::cout << "imageAvailable: " << imageAvailable << std::endl;
+    std::cout << "cmd" << cmd << std::endl;
 
 
 
-	while (!glfwWindowShouldClose(window))
-	{
-		glfwPollEvents();
+    while (!glfwWindowShouldClose(window))
+    {
+        glfwPollEvents();
 
         uint32_t imageIndex;
         vkAcquireNextImageKHR(device, swapchain, UINT64_MAX, imageAvailable, nullptr, &imageIndex);
@@ -187,8 +188,8 @@ int main()
 
         vkCmdBeginRendering(cmd, &renderInfo);
 
-		// Here you would record your rendering commands
-		// For example, you could bind a pipeline and draw commands here
+        // Here you would record your rendering commands
+        // For example, you could bind a pipeline and draw commands here
 
         vkCmdEndRendering(cmd);
         vkEndCommandBuffer(cmd);
@@ -215,10 +216,10 @@ int main()
         present.pSwapchains = &swapchain;
         present.pImageIndices = &imageIndex;
         vkQueuePresentKHR(queue, &present);
-	}
+    }
 
     vkDeviceWaitIdle(device);
-    for (auto view : views) 
+    for (auto view : views)
         vkDestroyImageView(device, view, nullptr);
     vkDestroySwapchainKHR(device, swapchain, nullptr);
     vkDestroyCommandPool(device, pool, nullptr);
@@ -228,9 +229,9 @@ int main()
     vkDestroyDevice(device, nullptr);
     vkDestroySurfaceKHR(instance, surface, nullptr);
     vkDestroyInstance(instance, nullptr);
-	glfwDestroyWindow(window);
+    glfwDestroyWindow(window);
 
-	glfwTerminate();
+    glfwTerminate();
 }
 
 
