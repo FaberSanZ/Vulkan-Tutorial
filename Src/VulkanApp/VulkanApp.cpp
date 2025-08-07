@@ -17,8 +17,17 @@ struct Vector2
 	Vector2 operator*(float scalar) const { return Vector2(x * scalar, y * scalar); }
 };
 
+struct QueueFamilyIndices
+{
+	uint32_t index { 0 }; // default family index for graphics queue and compute queue
+};
+
 VkInstance instance;
 VkPhysicalDevice gpu;
+VkDevice device;
+VkPhysicalDeviceFeatures deviceFeatures {};
+VkQueue queue;
+
 
 void CreateInstance()
 {
@@ -40,7 +49,7 @@ void CreateInstance()
 	createInfo.enabledExtensionCount = sizeof(instanceExtensions) / sizeof(instanceExtensions[0]);
 	createInfo.ppEnabledExtensionNames = instanceExtensions;
 
-	VkResult result = vkCreateInstance(&createInfo, nullptr, &instance);
+	vkCreateInstance(&createInfo, nullptr, &instance);
 
 }
 
@@ -51,27 +60,56 @@ void SelectGPU(uint32_t index)
 	// For simplicity, we are not implementing this in this example.
 
 	uint32_t physicalDeviceCount = 0;
-	VkResult result = vkEnumeratePhysicalDevices(instance, &physicalDeviceCount, nullptr);
+	vkEnumeratePhysicalDevices(instance, &physicalDeviceCount, nullptr);
 
 	std::vector<VkPhysicalDevice> physicalDevices(physicalDeviceCount);
 
-	result = vkEnumeratePhysicalDevices(instance, &physicalDeviceCount, physicalDevices.data());
+	vkEnumeratePhysicalDevices(instance, &physicalDeviceCount, physicalDevices.data());
 
-	if(physicalDeviceCount == 0 && index >= physicalDeviceCount) 
-	{
-		std::cerr << "No physical devices found or index out of range." << std::endl;
-		return;
-	}
 
 	gpu = physicalDevices[index]; // Select the first physical device
 }	
 
+void CreateDevice()
+{
+	// This function would typically create a Vulkan logical device.
+	// For simplicity, we are not implementing this in this example.
+	// You would need to query the queue family indices and create a VkDevice.
+	QueueFamilyIndices queueIndices {};
+	float queuePriority = 1.0f;
+
+
+	VkDeviceQueueCreateInfo queueCreateInfo {};
+	queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+	queueCreateInfo.queueFamilyIndex = queueIndices.index;
+	queueCreateInfo.queueCount = 1;
+	queueCreateInfo.pQueuePriorities = &queuePriority;
+
+	VkDeviceCreateInfo createInfo {};
+	createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+
+	createInfo.pQueueCreateInfos = &queueCreateInfo;
+	createInfo.queueCreateInfoCount = 1;
+	createInfo.pEnabledFeatures = &deviceFeatures;
+
+
+	vkCreateDevice(gpu, &createInfo, nullptr, &device);
+
+
+	vkGetDeviceQueue(device, queueIndices.index, 0, &queue);
+}
 
 
 void InitializeVulkan() 
 {
 	CreateInstance();
-	SelectGPU(0);
+	SelectGPU(0); // Select the first GPU (index 0)
+	CreateDevice();
+
+	std::cout << instance << std::endl;
+	std::cout << gpu << std::endl;
+	std::cout << device << std::endl;
+	std::cout << queue << std::endl;
 }
 
 void Destroy()
