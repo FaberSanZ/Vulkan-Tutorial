@@ -1,10 +1,19 @@
-// VulkanApp.cpp : This file contains the 'main' function. Program execution begins and ends there.
+﻿// VulkanApp.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
+
+#define VK_USE_PLATFORM_WIN32_KHR
+#define GLFW_EXPOSE_NATIVE_WIN32
 
 #include <iostream>
 #include <vector>
+#include <windows.h>
 #include "vulkan/vulkan.h"
+
+#include <vulkan/vulkan_win32.h>
+
 #include <glfw3.h>
+#include <glfw3native.h> // 👈 Obligatorio para funciones nativas
+
 
 struct Vector2
 {
@@ -26,8 +35,11 @@ struct QueueFamilyIndices
 VkInstance instance;
 VkPhysicalDevice gpu;
 VkDevice device;
+VkSurfaceKHR surface;
+
 VkPhysicalDeviceFeatures deviceFeatures {};
 VkQueue queue;
+
 
 
 void CreateInstance()
@@ -100,17 +112,39 @@ void CreateDevice()
 	vkGetDeviceQueue(device, queueIndices.index, 0, &queue);
 }
 
+void CreateSurface(HWND handle)
+{
+	// This function would typically create a Vulkan surface for rendering.
+	// For simplicity, we are not implementing this in this example.
+	// You would need to use platform-specific APIs to create a surface.
+	// For GLFW, you can use glfwCreateWindowSurface().
 
-void InitializeVulkan() 
+	VkWin32SurfaceCreateInfoKHR surfaceCreateInfo = {};
+	surfaceCreateInfo.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
+	surfaceCreateInfo.hwnd = (HWND)handle;
+	surfaceCreateInfo.hinstance = GetModuleHandle(nullptr); // o pasarla como global
+
+	VkSurfaceKHR surface;
+	VkResult result = vkCreateWin32SurfaceKHR(instance, &surfaceCreateInfo, nullptr, &surface);
+	if (result != VK_SUCCESS)
+	{
+		// Manejar error
+	}
+}
+
+
+void InitializeVulkan(HWND handle)
 {
 	CreateInstance();
 	SelectGPU(0); // Select the first GPU (index 0)
 	CreateDevice();
+	CreateSurface(handle); // Create a Vulkan surface using GLFW
 
 	std::cout << "Instance: " << instance << std::endl;
 	std::cout << "gpu: " << gpu << std::endl;
 	std::cout << "device: " << device << std::endl;
 	std::cout << "queue: " << queue << std::endl;
+	std::cout << "surface: " << surface << std::endl;
 }
 
 void Destroy()
@@ -134,7 +168,7 @@ int main()
 	GLFWwindow* window = glfwCreateWindow(width, height, "Vulkan", nullptr, nullptr);
 
 
-	InitializeVulkan();
+	InitializeVulkan(glfwGetWin32Window(window));
 
 
 
