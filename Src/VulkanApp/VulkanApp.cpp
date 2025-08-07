@@ -8,24 +8,9 @@
 #include <vector>
 #include <windows.h>
 #include "vulkan/vulkan.h"
-
 #include <vulkan/vulkan_win32.h>
-
 #include <glfw3.h>
 #include <glfw3native.h>
-
-
-struct Vector2
-{
-	float x, y;
-
-	Vector2() : x(0), y(0) {}
-	
-	Vector2(float x, float y) : x(x), y(y) {}
-	Vector2 operator+(const Vector2& other) const { return Vector2(x + other.x, y + other.y); }
-	Vector2 operator-(const Vector2& other) const { return Vector2(x - other.x, y - other.y); }
-	Vector2 operator*(float scalar) const { return Vector2(x * scalar, y * scalar); }
-};
 
 
 int main()
@@ -39,7 +24,7 @@ int main()
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
 	GLFWwindow* window = glfwCreateWindow(width, height, "Vulkan", nullptr, nullptr);
-    HWND hwnd = glfwGetWin32Window(window);
+	HWND hwnd = glfwGetWin32Window(window); // Get the Win32 HWND from GLFW
 
 
     // 1. Instance
@@ -182,7 +167,7 @@ int main()
 		glfwPollEvents();
 
         uint32_t imageIndex;
-        vkAcquireNextImageKHR(device, swapchain, UINT64_MAX, imageAvailable, VK_NULL_HANDLE, &imageIndex);
+        vkAcquireNextImageKHR(device, swapchain, UINT64_MAX, imageAvailable, nullptr, &imageIndex);
 
         VkCommandBufferBeginInfo begin { VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO };
         vkBeginCommandBuffer(cmd, &begin);
@@ -201,6 +186,10 @@ int main()
         renderInfo.pColorAttachments = &colorAttachment;
 
         vkCmdBeginRendering(cmd, &renderInfo);
+
+		// Here you would record your rendering commands
+		// For example, you could bind a pipeline and draw commands here
+
         vkCmdEndRendering(cmd);
         vkEndCommandBuffer(cmd);
 
