@@ -106,10 +106,10 @@ void InitializeVulkan()
 	SelectGPU(0); // Select the first GPU (index 0)
 	CreateDevice();
 
-	std::cout << instance << std::endl;
-	std::cout << gpu << std::endl;
-	std::cout << device << std::endl;
-	std::cout << queue << std::endl;
+	std::cout << "Instance: " << instance << std::endl;
+	std::cout << "gpu: " << gpu << std::endl;
+	std::cout << "device: " << device << std::endl;
+	std::cout << "queue: " << queue << std::endl;
 }
 
 void Destroy()
