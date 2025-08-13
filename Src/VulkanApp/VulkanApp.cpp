@@ -104,8 +104,8 @@ int main()
     vkCreateSwapchainKHR(device, &swapInfo, nullptr, &swapchain);
 
     uint32_t imageCount;
-    vkGetSwapchainImagesKHR(device, swapchain, &imageCount, nullptr);
     std::vector<VkImage> images(imageCount);
+    vkGetSwapchainImagesKHR(device, swapchain, &imageCount, nullptr);
     vkGetSwapchainImagesKHR(device, swapchain, &imageCount, images.data());
 
     // 6. Image Views
