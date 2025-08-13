@@ -1,5 +1,4 @@
-﻿// VulkanApp.cpp : This file contains the 'main' function. Program execution begins and ends there.
-
+﻿
 #define VK_USE_PLATFORM_WIN32_KHR
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <iostream>
@@ -38,12 +37,6 @@ int main()
     VkInstance instance;
     vkCreateInstance(&instanceInfo, nullptr, &instance);
 
-    // 2. Surface (Win32 handle)
-    VkSurfaceKHR surface;
-    VkWin32SurfaceCreateInfoKHR surfaceCreateInfo { VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR };
-    surfaceCreateInfo.hwnd = hwnd;
-    surfaceCreateInfo.hinstance = GetModuleHandle(nullptr);
-    vkCreateWin32SurfaceKHR(instance, &surfaceCreateInfo, nullptr, &surface);
 
 	// 3. Get GPU 
     uint32_t gpuCount;
@@ -54,7 +47,7 @@ int main()
 	VkPhysicalDevice gpu = gpus[0]; // Pick the first GPU
 
 
-	// 4. Create Logical Device and queue
+	// 3. Create Logical Device and queue
 	uint32_t queueFamilyIndex = 0; // Assume the first queue family supports graphics and presentation
     float queuePriority = 1.0f;
     VkDeviceQueueCreateInfo queueInfo { VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO };
@@ -79,6 +72,14 @@ int main()
 
     VkQueue queue;
     vkGetDeviceQueue(device, queueFamilyIndex, 0, &queue);
+
+
+    // 4. Surface (Win32 handle)
+    VkSurfaceKHR surface;
+    VkWin32SurfaceCreateInfoKHR surfaceCreateInfo { VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR };
+    surfaceCreateInfo.hwnd = hwnd;
+    surfaceCreateInfo.hinstance = GetModuleHandle(nullptr);
+    vkCreateWin32SurfaceKHR(instance, &surfaceCreateInfo, nullptr, &surface);
 
     // 5. Swapchain
     VkSurfaceCapabilitiesKHR caps;
