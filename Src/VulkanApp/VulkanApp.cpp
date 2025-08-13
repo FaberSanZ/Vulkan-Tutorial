@@ -40,8 +40,8 @@ int main()
 
 	// 3. Get GPU 
     uint32_t gpuCount;
-    vkEnumeratePhysicalDevices(instance, &gpuCount, nullptr);
     std::vector<VkPhysicalDevice> gpus(gpuCount);
+    vkEnumeratePhysicalDevices(instance, &gpuCount, nullptr);
     vkEnumeratePhysicalDevices(instance, &gpuCount, gpus.data());
 
 	VkPhysicalDevice gpu = gpus[0]; // Pick the first GPU
@@ -207,6 +207,7 @@ int main()
     vkDeviceWaitIdle(device);
     for (auto view : views)
         vkDestroyImageView(device, view, nullptr);
+
     vkDestroySwapchainKHR(device, swapchain, nullptr);
     vkDestroyCommandPool(device, pool, nullptr);
     vkDestroySemaphore(device, imageAvailable, nullptr);
