@@ -8,8 +8,16 @@
 #include <vulkan/vulkan_win32.h>
 #include <glfw3.h>
 #include <glfw3native.h>
+#include "OldCourse/RenderSystem.h"
 
 int main()
+{
+	MiniGame::RenderSystem renderSystem;
+    renderSystem.Run();
+    return 0;
+}
+
+int MinimalSetup()
 {
     uint32_t width = 1200;
     uint32_t height = 820;
@@ -217,4 +225,7 @@ int main()
     vkDestroyInstance(instance, nullptr);
     glfwDestroyWindow(window);
     glfwTerminate();
+
+
+	return 0;
 }

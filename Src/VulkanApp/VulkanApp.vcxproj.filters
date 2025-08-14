@@ -18,5 +18,8 @@
     <ClCompile Include="VulkanApp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="OldCourse\RenderSystem.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
