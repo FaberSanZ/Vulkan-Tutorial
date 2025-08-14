@@ -5,6 +5,7 @@
 #include <glfw3.h>
 #include <glfw3native.h>
 #include <windows.h>
+#include <iostream>
 
 
 namespace MiniGame
@@ -15,6 +16,10 @@ namespace MiniGame
 		uint32_t width;
 		uint32_t height;
 		GLFWwindow* window;
+
+
+		VkInstance instance;
+
 		void Run()
 		{
 			width = 1200;
@@ -24,13 +29,30 @@ namespace MiniGame
 			initVulkan();
 			Loop();
 			Cleanup();
+
+
+			std::cout << "Vulkan instance: " << instance;
 		}
 
 		void initVulkan() 
 		{
 			HWND hwnd = glfwGetWin32Window(window); // Get the Win32 HWND from GLFW
 
+			VkApplicationInfo appInfo { VK_STRUCTURE_TYPE_APPLICATION_INFO };
+			appInfo.apiVersion = VK_API_VERSION_1_3; // Use Vulkan 1.3
+
+			const char* extensions[] = { "VK_KHR_surface", "VK_KHR_win32_surface" };
+			
+			VkInstanceCreateInfo instanceInfo { VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO };
+			instanceInfo.pApplicationInfo = &appInfo;
+			instanceInfo.enabledExtensionCount = 2;
+			instanceInfo.ppEnabledExtensionNames = extensions;
+
+			vkCreateInstance(&instanceInfo, nullptr, &instance); // Create Vulkan instance
+
 		}
+
+
 
 		void Loop()
 		{
@@ -56,7 +78,6 @@ namespace MiniGame
 			glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 			glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 			window = glfwCreateWindow(width, height, "Vulkan", nullptr, nullptr);
-			// Initialize Vulkan and other resources here...
 		}
 	};
 }
