@@ -45,6 +45,7 @@ namespace MiniGame
 
 		VkInstance instance;
 		VkDebugUtilsMessengerEXT debugMessenger;
+		VkPhysicalDevice gpu = VK_NULL_HANDLE;
 
 
 		void Run()
@@ -94,6 +95,15 @@ namespace MiniGame
 
 
 			vkCreateInstance(&instanceInfo, nullptr, &instance); // Create Vulkan instance
+
+
+			uint32_t deviceCount = 0;
+			vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
+			std::vector<VkPhysicalDevice> gpus(deviceCount);
+			vkEnumeratePhysicalDevices(instance, &deviceCount, gpus.data());
+
+			gpu = gpus[0]; // Pick the first GPU (you can add logic to choose a suitable GPU based on your requirements)
+
 		}
 
 
