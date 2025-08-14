@@ -45,8 +45,8 @@ namespace MiniGame
 
 		VkInstance instance;
 		VkDebugUtilsMessengerEXT debugMessenger;
-		VkPhysicalDevice gpu = VK_NULL_HANDLE;
-
+		VkPhysicalDevice gpu;
+		VkDevice device;
 
 		void Run()
 		{
@@ -103,6 +103,35 @@ namespace MiniGame
 			vkEnumeratePhysicalDevices(instance, &deviceCount, gpus.data());
 
 			gpu = gpus[0]; // Pick the first GPU (you can add logic to choose a suitable GPU based on your requirements)
+
+
+			float queuePriority = 1.0f;	
+			uint32_t queueFamilyIndex = 0; // Assume the first queue family supports graphics and presentation
+			VkDeviceQueueCreateInfo queueInfo { VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO };
+			queueInfo.queueFamilyIndex = queueFamilyIndex;
+			queueInfo.queueCount = 1;
+			queueInfo.pQueuePriorities = &queuePriority;
+
+			const char* deviceExtensions[] = { "VK_KHR_swapchain" }; // Required for swapchain support
+
+
+			VkDeviceCreateInfo deviceInfo { VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO };
+			deviceInfo.pNext = nullptr; // No additional features needed for this example
+			deviceInfo.queueCreateInfoCount = 1;
+			deviceInfo.pQueueCreateInfos = &queueInfo;
+			deviceInfo.enabledExtensionCount = static_cast<uint32_t>(std::size(deviceExtensions));
+			deviceInfo.ppEnabledExtensionNames = deviceExtensions;
+
+			if (enableValidationLayers)
+			{
+				deviceInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
+				deviceInfo.ppEnabledLayerNames = validationLayers.data();
+			}
+			else
+				deviceInfo.enabledLayerCount = 0;
+
+			vkCreateDevice(gpu, &deviceInfo, nullptr, &device);
+
 
 		}
 
