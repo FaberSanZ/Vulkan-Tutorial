@@ -48,6 +48,8 @@ namespace MiniGame
 		VkPhysicalDevice gpu;
 		VkDevice device;
 		VkQueue queue;
+		VkSurfaceKHR surface;
+
 
 		void Run()
 		{
@@ -134,6 +136,13 @@ namespace MiniGame
 			vkCreateDevice(gpu, &deviceInfo, nullptr, &device);
 
 			vkGetDeviceQueue(device, queueFamilyIndex, 0, &queue); // Get the graphics queue from the device
+
+
+
+			VkWin32SurfaceCreateInfoKHR surfaceCreateInfo { VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR };
+			surfaceCreateInfo.hwnd = hwnd;
+			surfaceCreateInfo.hinstance = GetModuleHandle(nullptr);
+			vkCreateWin32SurfaceKHR(instance, &surfaceCreateInfo, nullptr, &surface);
 
 		}
 
