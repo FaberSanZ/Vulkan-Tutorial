@@ -47,6 +47,7 @@ namespace MiniGame
 		VkDebugUtilsMessengerEXT debugMessenger;
 		VkPhysicalDevice gpu;
 		VkDevice device;
+		VkQueue queue;
 
 		void Run()
 		{
@@ -132,6 +133,7 @@ namespace MiniGame
 
 			vkCreateDevice(gpu, &deviceInfo, nullptr, &device);
 
+			vkGetDeviceQueue(device, queueFamilyIndex, 0, &queue); // Get the graphics queue from the device
 
 		}
 
