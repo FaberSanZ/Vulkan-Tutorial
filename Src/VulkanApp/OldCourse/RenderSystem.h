@@ -49,6 +49,7 @@ namespace MiniGame
 		VkDevice device;
 		VkQueue queue;
 		VkSurfaceKHR surface;
+		VkSwapchainKHR swapchain;
 
 
 		void Run()
@@ -143,6 +144,32 @@ namespace MiniGame
 			surfaceCreateInfo.hwnd = hwnd;
 			surfaceCreateInfo.hinstance = GetModuleHandle(nullptr);
 			vkCreateWin32SurfaceKHR(instance, &surfaceCreateInfo, nullptr, &surface);
+
+
+
+
+			// 5. Swapchain
+			VkSurfaceCapabilitiesKHR caps;
+			vkGetPhysicalDeviceSurfaceCapabilitiesKHR(gpu, surface, &caps);
+
+			VkSurfaceFormatKHR format { VK_FORMAT_B8G8R8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR };
+			VkSwapchainCreateInfoKHR swapInfo { VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR };
+			swapInfo.surface = surface;
+			swapInfo.minImageCount = 3;
+			swapInfo.imageFormat = format.format;
+			swapInfo.imageColorSpace = format.colorSpace;
+			swapInfo.imageExtent = caps.currentExtent;
+			swapInfo.imageArrayLayers = 1;
+			swapInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+			swapInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
+			swapInfo.preTransform = caps.currentTransform;
+			swapInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+			swapInfo.presentMode = VK_PRESENT_MODE_FIFO_KHR;
+			swapInfo.clipped = true;
+
+			vkCreateSwapchainKHR(device, &swapInfo, nullptr, &swapchain);
+
+
 
 		}
 
