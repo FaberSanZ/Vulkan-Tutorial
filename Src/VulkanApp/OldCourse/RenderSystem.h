@@ -39,6 +39,7 @@ namespace MiniGame
 	public:
 		uint32_t width;
 		uint32_t height;
+		uint32_t imageCount = 3; // Number of images in the swapchain
 		GLFWwindow* window;
 		const std::vector<const char*> validationLayers = { "VK_LAYER_KHRONOS_validation" };
 		const bool enableValidationLayers = true;
@@ -50,6 +51,8 @@ namespace MiniGame
 		VkQueue queue;
 		VkSurfaceKHR surface;
 		VkSwapchainKHR swapchain;
+		std::vector<VkImageView> renderTargetViews { }; // Create image views for each swapchain image
+
 
 
 		void Run()
@@ -155,7 +158,7 @@ namespace MiniGame
 			VkSurfaceFormatKHR format { VK_FORMAT_B8G8R8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR };
 			VkSwapchainCreateInfoKHR swapInfo { VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR };
 			swapInfo.surface = surface;
-			swapInfo.minImageCount = 3;
+			swapInfo.minImageCount = imageCount;
 			swapInfo.imageFormat = format.format;
 			swapInfo.imageColorSpace = format.colorSpace;
 			swapInfo.imageExtent = caps.currentExtent;
@@ -170,6 +173,24 @@ namespace MiniGame
 			vkCreateSwapchainKHR(device, &swapInfo, nullptr, &swapchain);
 
 
+			uint32_t swap_img_count;
+			vkGetSwapchainImagesKHR(device, swapchain, &swap_img_count, nullptr);
+			std::vector<VkImage> images(swap_img_count);
+			vkGetSwapchainImagesKHR(device, swapchain, &swap_img_count, images.data());
+
+
+			renderTargetViews.resize(swap_img_count);
+
+			for (int i = 0; i < swap_img_count; i++)
+			{
+				VkImageViewCreateInfo viewInfo { VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO };
+				viewInfo.image = images[i];
+				viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+				viewInfo.format = format.format;
+				viewInfo.subresourceRange = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 };
+
+				vkCreateImageView(device, &viewInfo, nullptr, &renderTargetViews[i]); // Create image views for each swapchain image
+			}
 
 		}
 
