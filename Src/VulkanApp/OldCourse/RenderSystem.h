@@ -52,7 +52,7 @@ namespace MiniGame
 		VkSurfaceKHR surface;
 		VkSwapchainKHR swapchain;
 		std::vector<VkImageView> renderTargetViews { }; // Create image views for each swapchain image
-
+		VkCommandPool pool;
 
 
 		void Run()
@@ -191,6 +191,14 @@ namespace MiniGame
 
 				vkCreateImageView(device, &viewInfo, nullptr, &renderTargetViews[i]); // Create image views for each swapchain image
 			}
+
+
+			VkCommandPoolCreateInfo poolInfo { VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO };
+			poolInfo.queueFamilyIndex = 0;
+
+			vkCreateCommandPool(device, &poolInfo, nullptr, &pool);
+
+
 
 		}
 
