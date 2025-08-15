@@ -234,6 +234,10 @@ namespace MiniGame
 			{
 				glfwPollEvents(); // Poll for window events
 				// Here you would handle rendering, command buffer submission, etc.
+				uint32_t img_idx;
+				vkAcquireNextImageKHR(device, swapchain, UINT64_MAX, VK_NULL_HANDLE, VK_NULL_HANDLE, &img_idx);
+
+
 			}
 		}
 
