@@ -199,7 +199,9 @@ namespace MiniGame
 			vkCreateCommandPool(device, &poolInfo, nullptr, &pool);
 
 
+			VkPipeline pipeline;
 
+			VkPipelineCreateInfoKHR pipelineInfo { VK_STRUCTURE_TYPE_PIPELINE_CREATE_INFO };
 		}
 
 
