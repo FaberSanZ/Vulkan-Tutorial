@@ -44,10 +44,25 @@ namespace GameMath
 		float x;
 		float y;
 		float z;
+
+		Float3() : x(0), y(0), z(0) {}
+		Float3(float _x, float _y, float _z) : x(_x), y(_y), z(_z) {}
 	};
 	struct Float4x4
 	{
 		float m[4][4];
+
+		Float4x4() 
+		{
+			for (int i = 0; i < 4; ++i)
+				for (int j = 0; j < 4; ++j)
+					m[i][j] = (i == j) ? 1.0f : 0.0f; // Identity matrix
+		}
+
+		float* operator[](int row) 
+		{
+			return m[row];
+		}
 	};
 
 
@@ -55,6 +70,9 @@ namespace GameMath
 	{
 		int x;
 		int y;
+
+		Int2() : x(0), y(0) {}
+		Int2(int _x, int _y) : x(_x), y(_y) {}
 	};
 
 	struct Int3
@@ -62,6 +80,9 @@ namespace GameMath
 		int x;
 		int y;
 		int z;
+
+		Int3() : x(0), y(0), z(0) {}
+		Int3(int _x, int _y, int _z) : x(_x), y(_y), z(_z) {}
 	};
 
 }
