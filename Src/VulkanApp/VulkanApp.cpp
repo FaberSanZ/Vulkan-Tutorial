@@ -10,14 +10,13 @@
 #include <glfw3native.h>
 #include "OldCourse/RenderSystem.h"
 
-int main()
+int main2()
 {
-	MiniGame::RenderSystem renderSystem;
-    renderSystem.Run();
-    return 0;
+    return ::render();
 }
 
-int MinimalSetup()
+
+int main()
 {
     uint32_t width = 1200;
     uint32_t height = 820;
@@ -96,7 +95,7 @@ int MinimalSetup()
     VkSurfaceFormatKHR format { VK_FORMAT_B8G8R8A8_UNORM, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR };
     VkSwapchainCreateInfoKHR swapInfo { VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR };
     swapInfo.surface = surface;
-    swapInfo.minImageCount = 3;
+	swapInfo.minImageCount = 3; // Triple buffering TODO: check maxImageCount in caps
     swapInfo.imageFormat = format.format;
     swapInfo.imageColorSpace = format.colorSpace;
     swapInfo.imageExtent = caps.currentExtent;
@@ -105,7 +104,7 @@ int MinimalSetup()
     swapInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
     swapInfo.preTransform = caps.currentTransform;
     swapInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
-    swapInfo.presentMode = VK_PRESENT_MODE_FIFO_KHR;
+	swapInfo.presentMode = VK_PRESENT_MODE_FIFO_KHR; // Use mailbox present mode for low latency and no tearing
     swapInfo.clipped = true;
 
     VkSwapchainKHR swapchain;
